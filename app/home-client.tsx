@@ -102,12 +102,22 @@ function CategoryArtwork({ variant, className }: { variant: "orangeArc" | "darkG
 }
 
 const categoryCards = [
-  { number: "01 /", color: "text-[#f3802a]", artwork: "orangeArc" as const, artworkClassName: "h-[78px] w-[88px]", title: "Ontwerp", description: "Digitale oplossingen voor complexe systemen, informatie of taken.", marker: "curves" as const, href: "/ontwerp", rotation: "-0.85deg" },
-  { number: "02 /", color: "text-[#185047]", artwork: "darkGreenTopBar" as const, artworkClassName: "h-[54px] w-[88px]", title: "Ontwikkeling", description: "Aanpassen of bouwen van digitale producten.", marker: "slashes" as const, href: "/ontwikkeling", rotation: "1.8deg" },
-  { number: "03 /", color: "text-[#fa956f]", artwork: "coralWedge" as const, artworkClassName: "h-[88px] w-[54px]", title: "Onderzoek", description: "Uitlichten van knelpunten en kansen met data-analyse en UX research.", marker: "laneStripes" as const, href: "/onderzoek", rotation: "1.25deg" },
-  { number: "04 /", color: "text-[#d86033]", artwork: "terracottaCircle" as const, artworkClassName: "h-[72px] w-[72px]", title: "Offsite", description: "Trainingsdagen voor teams en professionals.", marker: "smiley" as const, href: "/offsite", rotation: "-1.45deg" },
-  { number: "05 /", color: "text-[#428c53]", artwork: "greenRoundedBase" as const, artworkClassName: "h-[54px] w-[88px]", title: "Objecten", description: "Fysieke producten van lokale offcuts.", marker: "cutPlan" as const, href: "/objecten", rotation: "0.7deg" },
+  { number: "01 /", color: "text-[#f3802a]", artwork: "orangeArc" as const, artworkClassName: "h-[78px] w-[88px]", slug: "ontwerp", title: "Ontwerp", description: "Digitale oplossingen voor complexe systemen, informatie of taken.", marker: "curves" as const },
+  { number: "02 /", color: "text-[#185047]", artwork: "darkGreenTopBar" as const, artworkClassName: "h-[54px] w-[88px]", slug: "ontwikkeling", title: "Ontwikkeling", description: "Aanpassen of bouwen van digitale producten.", marker: "slashes" as const },
+  { number: "03 /", color: "text-[#fa956f]", artwork: "coralWedge" as const, artworkClassName: "h-[88px] w-[54px]", slug: "onderzoek", title: "Onderzoek", description: "Uitlichten van knelpunten en kansen met data-analyse en UX research.", marker: "laneStripes" as const },
+  { number: "04 /", color: "text-[#d86033]", artwork: "terracottaCircle" as const, artworkClassName: "h-[72px] w-[72px]", slug: "offsite", title: "Offsite", description: "Trainingsdagen voor teams en professionals.", marker: "smiley" as const },
+  { number: "05 /", color: "text-[#428c53]", artwork: "greenRoundedBase" as const, artworkClassName: "h-[54px] w-[88px]", slug: "objecten", title: "Objecten", description: "Fysieke producten van lokale offcuts.", marker: "cutPlan" as const },
 ]
+
+type HomepageService = { title?: string; slug: string; cardDescription?: string }
+type HomepageContent = {
+  heroLabel?: string
+  heroStatement?: string
+  heroDescription?: string
+  inspirationTitle?: string
+  inspirationDescription?: string
+  content?: ContentBlock[]
+}
 
 type PromotedInspiration = {
   title?: string
@@ -119,12 +129,14 @@ type PromotedInspiration = {
 export default function HomeClient({
   hasSeenHomepageIntro = false,
   promotedInspiration,
-  content,
+  homePage,
+  services,
   contactEmail = DEFAULT_CONTACT_EMAIL,
 }: {
   hasSeenHomepageIntro?: boolean
   promotedInspiration?: PromotedInspiration
-  content?: ContentBlock[]
+  homePage?: HomepageContent | null
+  services?: HomepageService[]
   contactEmail?: string
 }) {
   const router = useRouter()
@@ -138,8 +150,22 @@ export default function HomeClient({
   const [blueAccentPosition, setBlueAccentPosition] = useState(defaultBlueAccentPosition)
   const [isBooting, setIsBooting] = useState(!hasSeenHomepageIntro)
   const [isPageVisible, setIsPageVisible] = useState(hasSeenHomepageIntro)
-  const inspirationTitle = promotedInspiration?.title ?? "Why so serious? Inspiration from urban design interventions."
+  const heroLabel = homePage?.heroLabel ?? "Offcut Collective"
+  const heroStatement = homePage?.heroStatement ?? "We look for hidden\ngems within the chaos."
+  const heroDescription = homePage?.heroDescription ?? "We all face complexity on a daily basis. Sometimes the solutions to this overload is hidden just within those systems and workflows. Decluttering these processes often teaches us valuable insights – and sometimes provides building blocks for new solutions."
+  const inspirationTitle = promotedInspiration?.title ?? homePage?.inspirationTitle ?? "Why so serious? Inspiration from urban design interventions."
+  const inspirationDescription = promotedInspiration?.description ?? homePage?.inspirationDescription
   const inspirationDate = promotedInspiration?.dateLabel ?? "Berlin art week 2026"
+  const serviceCards = categoryCards.map((card) => {
+    const service = services?.find((item) => item.slug === card.slug)
+
+    return {
+      ...card,
+      title: service?.title ?? card.title,
+      description: service?.cardDescription ?? card.description,
+      href: `/${card.slug}`,
+    }
+  })
 
   useEffect(() => {
     router.prefetch("/studio")
@@ -249,18 +275,14 @@ export default function HomeClient({
                 />
 
                 <div className="homepage-hero-copy relative mx-auto max-w-[980px] pb-[24px] pt-[30px] text-center">
-                  <p className="text-[12px] font-semibold uppercase tracking-[0.24em] text-[#185047]">Offcut Collective</p>
+                  <p className="text-[12px] font-semibold uppercase tracking-[0.24em] text-[#185047]">{heroLabel}</p>
 
-                  <h1 className="mx-auto mt-[22px] max-w-[860px] text-[72px] font-extrabold leading-[0.94] tracking-[-0.07em] text-[#11110f]">
-                    We look for hidden
-                    <br />
-                    gems within the chaos.
+                  <h1 className="mx-auto mt-[22px] max-w-[860px] whitespace-pre-line text-[72px] font-extrabold leading-[0.94] tracking-[-0.07em] text-[#11110f]">
+                    {heroStatement}
                   </h1>
 
                   <p className="mx-auto mt-[18px] max-w-[620px] text-[18px] leading-[1.45] text-[#5d625c]">
-                    We all face complexity on a daily basis. Sometimes the solutions to this overload is hidden just within
-                    those systems and workflows. Decluttering these processes often teaches us valuable insights – and
-                    sometimes provides building blocks for new solutions.
+                    {heroDescription}
                   </p>
 
                   <p className="mt-[14px] text-[12px] uppercase tracking-[0.08em] text-[#5d625c]">What ↓</p>
@@ -270,11 +292,19 @@ export default function HomeClient({
             </div>
           </section>
 
+          {homePage?.content?.length ? (
+            <section className="relative px-[42px] py-[38px]">
+              <div className="mx-auto max-w-[1240px]">
+                <ContentBlocks blocks={homePage.content} />
+              </div>
+            </section>
+          ) : null}
+
           <section className="relative overflow-hidden bg-[#e8f4f1] px-[42px] pb-[42px] pt-[30px]" id="work">
             <div className="mx-auto max-w-[1180px]">
               <div className="mx-auto flex max-w-[1180px] justify-center">
                 <div className="grid w-full max-w-[1180px] grid-cols-1 gap-[14px] sm:grid-cols-2 xl:grid-cols-5 xl:[grid-template-columns:repeat(5,minmax(0,1fr))]">
-                  {categoryCards.map((card, index) => {
+                  {serviceCards.map((card, index) => {
                     const cardClassName = `offcut-category-card group flex h-[258px] min-h-[258px] w-full max-w-[212px] flex-col justify-between rounded-[32px] bg-white p-[20px] shadow-[0px_16px_32px_0px_rgba(16,32,26,0.13)] transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-[0px_18px_32px_0px_rgba(16,32,26,0.16)] sm:max-w-none xl:max-w-none ${card.title === "Objecten" ? "hover:scale-[1.02]" : ""}`
                     const cardStyle: CSSProperties = {
                       animationDelay: `${index * 110}ms`,
@@ -315,6 +345,11 @@ export default function HomeClient({
                 <h2 className="mt-[18px] max-w-[610px] text-[32px] font-bold leading-[1.12] tracking-[-0.04em] text-[#11110f]">
                   {renderOptionallyUnderlinedTitle(inspirationTitle, promotedInspiration?.underlineText)}
                 </h2>
+                {inspirationDescription ? (
+                  <p className="mt-[12px] max-w-[620px] text-[16px] leading-[1.45] text-[#5d625c]">
+                    {inspirationDescription}
+                  </p>
+                ) : null}
               </div>
 
               <div className="mt-[12px] flex items-end justify-between gap-[18px] text-[#11110f]">
@@ -329,13 +364,6 @@ export default function HomeClient({
             </div>
           </section>
 
-          {content?.length ? (
-            <section className="relative px-[42px] py-[38px]">
-              <div className="mx-auto max-w-[1240px]">
-                <ContentBlocks blocks={content} />
-              </div>
-            </section>
-          ) : null}
         </main>
         <SiteFooter contactEmail={contactEmail} />
         </PageTransitionFrame>

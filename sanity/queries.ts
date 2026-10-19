@@ -18,6 +18,12 @@ export const HOME_PAGE_QUERY = `*[_id == "homePage"][0]{
   ${CONTENT_BLOCKS_PROJECTION}
 }`
 
+export const HOMEPAGE_SERVICE_CARDS_QUERY = `*[_type == "servicePage" && slug.current in ["ontwerp", "ontwikkeling", "onderzoek", "offsite", "objecten"]]{
+  title,
+  "slug": slug.current,
+  cardDescription
+}`
+
 export const ABOUT_PAGE_QUERY = `*[_id == "aboutPage"][0]{
   kicker,
   title,

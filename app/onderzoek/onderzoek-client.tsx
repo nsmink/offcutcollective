@@ -364,14 +364,14 @@ export default function ResearchClient({ config = defaultServicePageConfig }: { 
           </section>
 
           <div className="service-cta-row">
-            <a href="/#contact" className="service-cta-button">
+            <a href={`mailto:${contactEmail}`} className="service-cta-button">
               <span className="service-cta-kicker">Interested in our approach?</span>
               <span className="service-cta-label">Let&rsquo;s talk <span aria-hidden="true">↗</span></span>
             </a>
           </div>
         </div>
       </main>
-      <SiteFooter />
+      <SiteFooter contactEmail={contactEmail} />
       </PageTransitionFrame>
     </div>
   )

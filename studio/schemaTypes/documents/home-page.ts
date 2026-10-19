@@ -31,6 +31,7 @@ export const homePage = defineType({
     defineField({
       name: 'inspirationTitle',
       title: 'Inspiration title',
+      description: 'Used when there is no promoted Inspiration item.',
       type: 'string',
     }),
     defineField({
@@ -39,6 +40,9 @@ export const homePage = defineType({
       type: 'text',
       rows: 3,
     }),
-    contentBlocksField,
+    defineField({
+      ...contentBlocksField,
+      description: 'Optional editorial content shown between the homepage introduction and service cards.',
+    }),
   ],
 })
