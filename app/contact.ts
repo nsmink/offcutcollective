@@ -1,0 +1,1 @@
+export const DEFAULT_CONTACT_EMAIL = "studio@offcut.nl"

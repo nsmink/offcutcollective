@@ -7,6 +7,7 @@ import { ABOUT_PAGE_QUERY, SITE_SETTINGS_QUERY } from "@/sanity/queries"
 import { renderOptionallyUnderlinedTitle } from "../drawn-annotations"
 import { PageTransitionFrame } from "../page-transition"
 import { ContentBlocks, type ContentBlock } from "../content-blocks"
+import { DEFAULT_CONTACT_EMAIL } from "../contact"
 
 export const metadata: Metadata = {
   title: "About — Offcut Co.",
@@ -43,7 +44,7 @@ export default async function AboutPage() {
         <nav className="studio-nav" aria-label="Main navigation">
           <Link href="/#work">Work</Link>
           <TransitionLink href="/about" aria-current="page">About</TransitionLink>
-          <Link href="/#contact">Say hello ↗</Link>
+          <a href={`mailto:${siteSettings?.contactEmail ?? DEFAULT_CONTACT_EMAIL}`}>Say hello ↗</a>
         </nav>
       </header>
 
@@ -58,9 +59,9 @@ export default async function AboutPage() {
           <div className="about-copy">
             {paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
           </div>
-          <Link href={`mailto:${siteSettings?.contactEmail ?? "hello@offcut.studio"}`} className="about-contact">
+          <a href={`mailto:${siteSettings?.contactEmail ?? DEFAULT_CONTACT_EMAIL}`} className="about-contact">
             {aboutPage?.contactLabel ?? "Start a conversation"} ↗
-          </Link>
+          </a>
           <ContentBlocks blocks={aboutPage?.content} />
         </section>
       </main>

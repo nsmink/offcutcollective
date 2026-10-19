@@ -11,6 +11,7 @@ import {
 } from "react"
 import { CircledRegion, Underlined } from "../drawn-annotations"
 import { PageTransitionFrame } from "../page-transition"
+import { DEFAULT_CONTACT_EMAIL } from "../contact"
 
 type InspirationPaperStyle = CSSProperties
 
@@ -182,7 +183,7 @@ export default function StudioClient() {
         <nav className="studio-nav" aria-label="Main navigation">
           <Link href="/#work">Work</Link>
           <Link href="/studio" aria-current="page">Studio</Link>
-          <Link href="/#contact">Say hello ↗</Link>
+          <a href={`mailto:${DEFAULT_CONTACT_EMAIL}`}>Say hello ↗</a>
         </nav>
       </header>
 

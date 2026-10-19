@@ -7,6 +7,7 @@ import { PAGE_BY_SLUG_QUERY, PAGE_SLUGS_QUERY, SITE_SETTINGS_QUERY } from "@/san
 import { renderOptionallyUnderlinedTitle } from "../drawn-annotations"
 import { PageTransitionFrame } from "../page-transition"
 import { ContentBlocks, type ContentBlock } from "../content-blocks"
+import { DEFAULT_CONTACT_EMAIL } from "../contact"
 
 // Reserved routes handled by their own dedicated page files. A generic CMS
 // page created in Sanity with one of these slugs would otherwise collide
@@ -72,7 +73,7 @@ export default async function GenericPage({ params }: { params: Promise<{ slug: 
 
   return (
     <div className="about-page">
-      <SiteHeader />
+      <SiteHeader contactEmail={siteSettings?.contactEmail} />
 
       <PageTransitionFrame>
         <main className="about-shell">
@@ -86,7 +87,7 @@ export default async function GenericPage({ params }: { params: Promise<{ slug: 
               </div>
             )}
             {page.contactLabel && (
-              <a href={`mailto:${siteSettings?.contactEmail ?? "hello@offcut.studio"}`} className="about-contact">
+              <a href={`mailto:${siteSettings?.contactEmail ?? DEFAULT_CONTACT_EMAIL}`} className="about-contact">
                 {page.contactLabel} ↗
               </a>
             )}

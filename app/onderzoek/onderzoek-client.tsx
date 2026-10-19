@@ -4,6 +4,7 @@ import Link from "next/link"
 import TransitionLink from "../transition-link"
 import SiteFooter from "../site-footer"
 import { PageTransitionFrame } from "../page-transition"
+import { DEFAULT_CONTACT_EMAIL } from "../contact"
 import { CircledRegion, renderUnderlinedTitle, toCircleRegion } from "../drawn-annotations"
 import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type PointerEvent } from "react"
 
@@ -78,6 +79,7 @@ export type ServicePageConfig = {
   title: string
   intro: string
   rotation: string
+  contactEmail?: string
   topics?: ServiceTopic[]
 }
 
@@ -95,6 +97,7 @@ export default function ResearchClient({ config = defaultServicePageConfig }: { 
   const [draggablePositions, setDraggablePositions] = useState<DraggablePositions>({})
   const [activeDraggableId, setActiveDraggableId] = useState<DraggableId | null>(null)
   const topics = config.topics ?? []
+  const contactEmail = config.contactEmail ?? DEFAULT_CONTACT_EMAIL
   const [activeTopicId, setActiveTopicId] = useState(topics[0]?.id)
   const activeTopic = topics.find((topic) => topic.id === activeTopicId) ?? topics[0]
   const flowGroups = activeTopic?.content?.length ? groupTopicContent(activeTopic.content) : []
@@ -253,7 +256,7 @@ export default function ResearchClient({ config = defaultServicePageConfig }: { 
         <nav className="studio-nav" aria-label="Main navigation">
           <Link href="/#work">Work</Link>
           <TransitionLink href="/about">About</TransitionLink>
-          <Link href="/#contact">Say hello ↗</Link>
+          <a href={`mailto:${contactEmail}`}>Say hello ↗</a>
         </nav>
       </header>
 

@@ -1,5 +1,5 @@
 import { client } from "@/sanity/client"
-import { SERVICE_PAGE_BY_SLUG_QUERY } from "@/sanity/queries"
+import { SERVICE_PAGE_BY_SLUG_QUERY, SITE_SETTINGS_QUERY } from "@/sanity/queries"
 import type { ServicePageConfig } from "@/app/onderzoek/onderzoek-client"
 
 type SanityServiceTopic = {
@@ -21,11 +21,14 @@ type SanityServiceTopic = {
 export async function getServicePageConfig(
   fallback: ServicePageConfig,
 ): Promise<ServicePageConfig> {
-  const servicePage = await client.fetch<{
-    title?: string
-    intro?: string
-    topics?: SanityServiceTopic[]
-  } | null>(SERVICE_PAGE_BY_SLUG_QUERY, { slug: fallback.slug })
+  const [servicePage, siteSettings] = await Promise.all([
+    client.fetch<{
+      title?: string
+      intro?: string
+      topics?: SanityServiceTopic[]
+    } | null>(SERVICE_PAGE_BY_SLUG_QUERY, { slug: fallback.slug }),
+    client.fetch<{ contactEmail?: string } | null>(SITE_SETTINGS_QUERY),
+  ])
 
   const topics = servicePage?.topics
     ?.filter((topic): topic is SanityServiceTopic & { _key: string; title: string } =>
@@ -44,5 +47,6 @@ export async function getServicePageConfig(
     title: servicePage?.title ?? fallback.title,
     intro: servicePage?.intro ?? fallback.intro,
     topics: topics ?? [],
+    contactEmail: siteSettings?.contactEmail,
   }
 }

@@ -6,6 +6,7 @@ import { useEffect, useState, type CSSProperties } from "react"
 import SiteFooter from "./site-footer"
 import TransitionLink from "./transition-link"
 import { PageTransitionFrame } from "./page-transition"
+import { DEFAULT_CONTACT_EMAIL } from "./contact"
 import { renderOptionallyUnderlinedTitle } from "./drawn-annotations"
 import { ContentBlocks, type ContentBlock } from "./content-blocks"
 
@@ -119,10 +120,12 @@ export default function HomeClient({
   hasSeenHomepageIntro = false,
   promotedInspiration,
   content,
+  contactEmail = DEFAULT_CONTACT_EMAIL,
 }: {
   hasSeenHomepageIntro?: boolean
   promotedInspiration?: PromotedInspiration
   content?: ContentBlock[]
+  contactEmail?: string
 }) {
   const router = useRouter()
   const [shouldRunHomepageIntro, setShouldRunHomepageIntro] = useState(!hasSeenHomepageIntro)
@@ -219,7 +222,7 @@ export default function HomeClient({
             <nav className="flex items-center gap-[28px] text-[14px] text-black">
               <Link href="#work" className="transition-opacity hover:opacity-70">Work</Link>
               <TransitionLink href="/about" className="transition-opacity hover:opacity-70">About</TransitionLink>
-              <Link href="#contact" className="transition-opacity hover:opacity-70">Say hello ↗</Link>
+              <a href={`mailto:${contactEmail}`} className="transition-opacity hover:opacity-70">Say hello ↗</a>
             </nav>
           </div>
         </header>
@@ -294,18 +297,10 @@ export default function HomeClient({
                       </>
                     )
 
-                    if ("href" in card) {
-                      return (
-                        <TransitionLink key={card.title} href={card.href} className={cardClassName} style={cardStyle}>
-                          {cardContent}
-                        </TransitionLink>
-                      )
-                    }
-
                     return (
-                      <article key={card.title} className={cardClassName} style={cardStyle}>
+                      <TransitionLink key={card.title} href={card.href} className={cardClassName} style={cardStyle}>
                         {cardContent}
-                      </article>
+                      </TransitionLink>
                     )
                   })}
                 </div>
@@ -322,7 +317,7 @@ export default function HomeClient({
                 </h2>
               </div>
 
-              <div className="mt-[12px] flex items-end justify-between gap-[18px] text-[#11110f]" id="contact">
+              <div className="mt-[12px] flex items-end justify-between gap-[18px] text-[#11110f]">
                 <div>
                   <p className="text-[12px] uppercase tracking-[0.12em]">{inspirationDate}</p>
                   <TransitionLink href="/studio" className="inspiration-explore-link mt-[4px] inline-flex items-center gap-[4px] text-[28px] leading-none">
@@ -342,7 +337,7 @@ export default function HomeClient({
             </section>
           ) : null}
         </main>
-        <SiteFooter />
+        <SiteFooter contactEmail={contactEmail} />
         </PageTransitionFrame>
       </div>
       </div>
